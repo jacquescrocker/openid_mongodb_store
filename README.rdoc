@@ -1,6 +1,9 @@
-= openid_mongodb_store
+= Openid MongoDB Store
 
-Description goes here.
+OpenID requires some form of storage for its various cryptographic nuts and bolts. This project lets you use MongoDB (through MongoMapper) for that storage. This was pretty much copied from the ActiveRecord adaptor.
+
+Dropped into an application it will inherit whatever MongoMapper settings already exist.
+
 
 == Note on Patches/Pull Requests
  
