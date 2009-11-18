@@ -2,6 +2,10 @@
 
 OpenID requires some form of storage for its various cryptographic nuts and bolts. This project lets you use MongoDB (through MongoMapper) for that storage. This was pretty much copied from the ActiveRecord adaptor.
 
+== Install
+
+gem install openid_mongodb_store
+
 Will inherit whatever MongoMapper settings already exist. If you are using localhost and no username or password, only the database name is required:
 require 'mongomapper'
 MongoMapper.database = 'my_db_name'
