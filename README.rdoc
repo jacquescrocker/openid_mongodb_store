@@ -12,6 +12,8 @@ MongoMapper.connection = Mongo::Connection.new('hostname')
 MongoMapper.database   = 'my_db_name'
 MongoMapper.database.authenticate('username','password')
 
+== Future plans
+* Get MongoMapper out of the picture, interact directly with the MongoDB gem.
 
 
 == Note on Patches/Pull Requests
