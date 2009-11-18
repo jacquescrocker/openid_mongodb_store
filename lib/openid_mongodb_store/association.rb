@@ -1,4 +1,4 @@
-class Association
+class OpenidMongodbStore::Association
   include MongoMapper::Document
   
   before_save :compute_expire_at

@@ -2,7 +2,16 @@
 
 OpenID requires some form of storage for its various cryptographic nuts and bolts. This project lets you use MongoDB (through MongoMapper) for that storage. This was pretty much copied from the ActiveRecord adaptor.
 
-Dropped into an application it will inherit whatever MongoMapper settings already exist.
+Will inherit whatever MongoMapper settings already exist. If you are using localhost and no username or password, only the database name is required:
+require 'mongomapper'
+MongoMapper.database = 'my_db_name'
+
+For MongoHQ and other hosts you may need:
+require 'mongomapper'
+MongoMapper.connection = Mongo::Connection.new('hostname')
+MongoMapper.database   = 'my_db_name'
+MongoMapper.database.authenticate('username','password')
+
 
 
 == Note on Patches/Pull Requests
