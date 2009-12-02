@@ -31,15 +31,19 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
   end
 
   def get_association(server_url, handle=nil)
-    assocs = if handle.blank?
+    assocs = if (handle.nil? or handle.empty?)
       # Association.all(:conditions => {:server_url => server_url})
-      associations.find('server_url' => server_url)
+      associations.find({'server_url' => server_url})
     else
       # Association.all(:conditions => {:server_url => server_url, :handle => handle})
-      associations.find('server_url' => server_url, 'handle' => handle)
+      associations.find({'server_url' => server_url, 'handle' => handle})
     end
+    
+    assoc_records = assocs.collect {|a| a }
 
-    assocs.reverse.each do |a|
+    # TODO: Removed .reverse here, make sure that was reasonable.
+    # assocs.reverse.each do |a|
+    assoc_records.each do |a|
       # a = assoc.from_record
       openid_association = OpenID::Association.new(a['handle'],
                                                    a['secret'],
@@ -52,7 +56,7 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
       else
         return openid_association
       end
-    end if assocs.any? # <- may not be needed
+    end if assoc_records.any? # <- may not be needed
     
     # Fail if there isn't an acceptable association
     return nil
