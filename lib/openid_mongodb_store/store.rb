@@ -32,26 +32,21 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
 
   def get_association(server_url, handle=nil)
     assocs = if (handle.nil? or handle.empty?)
-      # Association.all(:conditions => {:server_url => server_url})
       associations.find({'server_url' => server_url})
     else
-      # Association.all(:conditions => {:server_url => server_url, :handle => handle})
       associations.find({'server_url' => server_url, 'handle' => handle})
     end
     
     assoc_records = assocs.collect {|a| a }
 
     # TODO: Removed .reverse here, make sure that was reasonable.
-    # assocs.reverse.each do |a|
     assoc_records.each do |a|
-      # a = assoc.from_record
       openid_association = OpenID::Association.new(a['handle'],
                                                    a['secret'],
                                                    a['issued'],
                                                    a['lifetime'],
                                                    a['assoc_type'])
       if openid_association.expires_in == 0
-        # assoc.destroy
         associations.remove({'_id' => a['_id']})
       else
         return openid_association
@@ -63,27 +58,20 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
   end
   
   def remove_association(server_url, handle)
-    # Association.delete_all(:server_url => server_url, :handle => handle)
     associations.remove({'server_url'=> server_url, 'handle' => handle})
   end
   
   def use_nonce(server_url, timestamp, salt)
-    # return false if Nonce.first(:conditions => {:server_url=>server_url,
-    #                                             :timestamp => timestamp,
-    #                                             :salt => salt})
     return false if nonces.find_one({'server_url'=> server_url,
                                      'timestamp' => timestamp,
                                      'salt'      => salt})
     return false if (timestamp - Time.now.to_i).abs > OpenID::Nonce.skew
-    # Nonce.create(:server_url => server_url, :timestamp => timestamp, :salt => salt)
     nonces.insert({'server_url' => server_url, 'timestamp' => timestamp, 'salt' => salt})
     return true
   end
   
   def cleanup_nonces
     now = Time.now.to_i
-    # Nonce.delete_all({:timestamp => {'$gt'=> (now + OpenID::Nonce.skew),
-    #                                  '$lt'=> (now - OpenID::Nonce.skew)}})
     nonces.remove({'timestamp' => {'$gt'=> (now + OpenID::Nonce.skew),
                                    '$lt'=> (now - OpenID::Nonce.skew)}})
   end
