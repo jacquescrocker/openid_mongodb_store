@@ -2,12 +2,12 @@ require 'openid'
 require 'mongo'
 
 module OpenidMongodbStore
-  
+  @@database = nil
   def self.database=(db)
     @@database = db
   end
   
-  def database
+  def self.database
     @@database
   end
   
