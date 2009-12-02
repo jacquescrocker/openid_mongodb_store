@@ -1,3 +1,5 @@
 class OpenidMongodbStore::Nonce
-  include MongoMapper::Document
+  def self.collection
+    @@collection ||= OpenidMongodbStore.database.collection('openid_mongo_store_nonce')
+  end
 end

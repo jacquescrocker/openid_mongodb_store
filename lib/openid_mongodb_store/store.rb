@@ -7,6 +7,7 @@ require 'openid/store/interface'
 
 class OpenidMongodbStore::Store < OpenID::Store::Interface
   include OpenidMongodbStore
+  
   def store_association(server_url, association)
     remove_association(server_url, association.handle)
     Association.create(:server_url => server_url,
