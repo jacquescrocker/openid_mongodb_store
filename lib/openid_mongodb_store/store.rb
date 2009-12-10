@@ -1,9 +1,5 @@
-# require File.dirname(__FILE__) + '/nonce'
-# require File.dirname(__FILE__) + '/association'
-
 # Again, from the OpenID gem
 require 'openid/store/interface'
-
 
 class OpenidMongodbStore::Store < OpenID::Store::Interface
   include OpenidMongodbStore
@@ -22,12 +18,14 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
   
   def store_association(server_url, association)
     remove_association(server_url, association.handle)
-    associations.insert(:server_url => server_url,
-                        :handle     => association.handle,
-                        :secret     => association.secret,
-                        :issued     => association.issued,
-                        :lifetime   => association.lifetime,
-                        :assoc_type => association.assoc_type)
+    
+    secret = Mongo::Binary.new(association.secret)
+    associations.insert('server_url' => server_url,
+                        'handle'     => association.handle,
+                        'secret'     => secret,
+                        'issued'     => association.issued,
+                        'lifetime'   => association.lifetime,
+                        'assoc_type' => association.assoc_type)
   end
 
   def get_association(server_url, handle=nil)
@@ -42,7 +40,7 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
     # TODO: Removed .reverse here, make sure that was reasonable.
     assoc_records.each do |a|
       openid_association = OpenID::Association.new(a['handle'],
-                                                   a['secret'],
+                                                   a['secret'].to_s,
                                                    a['issued'],
                                                    a['lifetime'],
                                                    a['assoc_type'])
