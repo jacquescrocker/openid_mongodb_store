@@ -1,35 +1,14 @@
 = Openid MongoDB Store
 
-OpenID requires some form of storage for its various cryptographic nuts and bolts. This project lets you use MongoDB (through MongoMapper) for that storage. This was pretty much copied from the ActiveRecord adaptor.
+OpenID requires some form of storage for its various cryptographic nuts and bolts. This project lets you use MongoDB (through the Mongo Ruby library) for that storage. This was pretty largely taken from the ActiveRecord adaptor.
 
 == Install
 
 gem install openid_mongodb_store
 
-Will inherit whatever MongoMapper settings already exist. If you are using localhost and no username or password, only the database name is required:
-require 'mongomapper'
-MongoMapper.database = 'my_db_name'
-
-For MongoHQ and other hosts you may need:
-require 'mongomapper'
-MongoMapper.connection = Mongo::Connection.new('hostname')
-MongoMapper.database   = 'my_db_name'
-MongoMapper.database.authenticate('username','password')
-
-== Future plans
-* Get MongoMapper out of the picture, interact directly with the MongoDB gem.
-
-
-== Note on Patches/Pull Requests
- 
-* Fork the project.
-* Make your feature addition or bug fix.
-* Add tests for it. This is important so I don't break it in a
-  future version unintentionally.
-* Commit, do not mess with rakefile, version, or history.
-  (if you want to have your own version, that is fine but
-   bump version in a commit by itself I can ignore when I pull)
-* Send me a pull request. Bonus points for topic branches.
+db = Mongo::Connection.new('localhost').db('testorama')
+db.authenticate('foo','bar')
+OpenidMongodbStore::Store.new(db)
 
 == Copyright
 
