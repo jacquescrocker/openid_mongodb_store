@@ -5,8 +5,8 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "openid_mongodb_store"
-    gem.summary = "An adaptor for storing OpenID nonces and associations with MongoMapper"
-    gem.description = "Like the ActiveRecord Store, but for MongoMapper."
+    gem.summary = "An adaptor for storing OpenID nonces and associations with Mongo. Uses 10gen's Mongo Ruby library so should work with MongoMapper, Mongoid, and others."
+    gem.description = "Like the ActiveRecord Store, but for Mongo."
     gem.email = "samsm@samsm.com"
     gem.homepage = "http://github.com/samsm/openid_mongodb_store"
     gem.authors = ["Sam Schenkman-Moore"]
