@@ -11,6 +11,7 @@ begin
     gem.homepage = "http://github.com/samsm/openid_mongodb_store"
     gem.authors = ["Sam Schenkman-Moore"]
     gem.add_development_dependency "yard", ">= 0"
+    gem.add_development_dependency "mongo", ">= 1.0.3"
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
