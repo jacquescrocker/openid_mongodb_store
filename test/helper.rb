@@ -17,8 +17,47 @@ class Test::Unit::TestCase
     timestamp(true)
   end
 
+  ##
+  ## Mongo-specific database test configuration here.
+  ##
+
   def store
     @store ||= OpenidMongodbStore::Store.new(test_database)
+  end
+
+  def insert_old_association
+    store.associations.insert('server_url' => server_url,
+                              'handle'     => handle,
+                              'secret'     => BSON::Binary.new(secret),
+                              'issued'     => too_old_association_timestamp,
+                              'lifetime'   => lifetime,
+                              'assoc_type' => assoc_type,
+                              'expire_at'  => (too_old_association_timestamp + lifetime))
+    
+  end
+  
+  def find_old_association
+    store.associations.find_one({'issued' => too_old_association_timestamp})
+  end
+  
+  def insert_old_nonce
+    store.nonces.insert({'server_url' => server_url, 'timestamp' => too_old_nonce_timestamp, 'salt' => salt})
+  end
+  
+  def find_old_nonce
+    store.nonces.find_one({'server_url'=> server_url, 'timestamp' => too_old_nonce_timestamp, 'salt' => salt})
+  end
+
+  ##
+  ## End of Mongo-specific test config
+  ##
+
+  def too_old_nonce_timestamp
+    timestamp - (OpenID::Nonce.skew * 1.5).to_i
+  end
+
+  def too_old_association_timestamp
+    timestamp - (60*60*24*365) # year old
   end
 
   def store_association(opts = {})
