@@ -27,6 +27,10 @@ class Test::Unit::TestCase
     store.store_association(server_url,association)
   end
 
+  def get_association(server_url = server_url, handle = handle)
+    store.get_association(server_url,handle)
+  end
+
   def server_url
     "http://localhost:98765/"
   end
