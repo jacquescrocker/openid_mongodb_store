@@ -25,7 +25,8 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
                         'secret'     => secret,
                         'issued'     => association.issued,
                         'lifetime'   => association.lifetime,
-                        'assoc_type' => association.assoc_type)
+                        'assoc_type' => association.assoc_type,
+                        'expire_at'  => (association.issued + association.lifetime))
   end
 
   def get_association(server_url, handle=nil)
@@ -70,14 +71,13 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
 
   def cleanup_nonces
     now = Time.now.to_i
-    nonces.remove({'timestamp' => {'$gt'=> (now + OpenID::Nonce.skew),
-                                   '$lt'=> (now - OpenID::Nonce.skew)}})
+    nonces.remove({'timestamp' => {'$gt'=> (now + OpenID::Nonce.skew)}})
+    nonces.remove({'timestamp' => {'$lt'=> (now - OpenID::Nonce.skew)}})
   end
 
   def cleanup_associations
     now = Time.now.to_i
-    # Association.delete_all(:expire_at => {'$gt' => now})
-    associations.remove('expire_at' => {'$gt' => now})
+    associations.remove('expire_at' => {'$lt' => now})
   end
 
 end

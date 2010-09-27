@@ -45,7 +45,7 @@ class Test::Unit::TestCase
 
   def timestamp(refresh = false)
     @timestamp = nil if refresh
-    @timestamp ||= Time.now - 10 # 10 seconds ago
+    @timestamp ||= (Time.now - 10).to_i # 10 seconds ago
   end
 
   def lifetime
