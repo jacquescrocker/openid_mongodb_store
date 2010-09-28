@@ -9,7 +9,10 @@ class TestOpenidMongodbStore < Test::Unit::TestCase
     assert store_association
 
     # Retrieve the association
-    assert store.get_association(server_url, handle)
+    assert assoc = store.get_association(server_url, handle)
+
+    # Check status of secret
+    assert assoc.secret == secret
   end
 
   def test_remove_association

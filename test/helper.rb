@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'test/unit'
-require 'mocha'
 require 'ruby-debug'
 
 $LOAD_PATH.unshift(File.dirname(__FILE__))
@@ -20,6 +19,10 @@ class Test::Unit::TestCase
   ##
   ## Mongo-specific database test configuration here.
   ##
+  def teardown
+    test_database.drop_collection 'openid_mongo_store_associations'
+    test_database.drop_collection 'openid_mongo_store_nonces'
+  end
 
   def store
     @store ||= OpenidMongodbStore::Store.new(test_database)
@@ -33,17 +36,17 @@ class Test::Unit::TestCase
                               'lifetime'   => lifetime,
                               'assoc_type' => assoc_type,
                               'expire_at'  => (too_old_association_timestamp + lifetime))
-    
+
   end
-  
+
   def find_old_association
     store.associations.find_one({'issued' => too_old_association_timestamp})
   end
-  
+
   def insert_old_nonce
     store.nonces.insert({'server_url' => server_url, 'timestamp' => too_old_nonce_timestamp, 'salt' => salt})
   end
-  
+
   def find_old_nonce
     store.nonces.find_one({'server_url'=> server_url, 'timestamp' => too_old_nonce_timestamp, 'salt' => salt})
   end
@@ -97,11 +100,6 @@ class Test::Unit::TestCase
 
   def salt
     "KuIaaq"
-  end
-
-  def teardown
-    test_database.drop_collection 'openid_mongo_store_associations'
-    test_database.drop_collection 'openid_mongo_store_nonces'
   end
 
 end
