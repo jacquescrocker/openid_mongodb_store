@@ -63,9 +63,8 @@ class Test::Unit::TestCase
     timestamp - (60*60*24*365) # year old
   end
 
-  def store_association(opts = {})
-    association = OpenID::Association.new(handle, secret, timestamp, lifetime, assoc_type)
-    opts.each_pair {|k,v| association.send "#{k}=", v}
+  def store_association(issued = timestamp)
+    association = OpenID::Association.new(handle, secret, issued, lifetime, assoc_type)
     store.store_association(server_url,association)
   end
 

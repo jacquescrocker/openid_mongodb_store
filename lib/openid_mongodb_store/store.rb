@@ -19,14 +19,20 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
   def store_association(server_url, association)
     remove_association(server_url, association.handle)
 
+    issued = if association.issued.to_s =~ /\A\d+\Z/
+      association.issued
+    else
+      Time.parse(association.issued).to_i
+    end
+
     secret = BSON::Binary.new(association.secret)
     associations.insert('server_url' => server_url,
                         'handle'     => association.handle,
                         'secret'     => secret,
-                        'issued'     => association.issued,
+                        'issued'     => issued,
                         'lifetime'   => association.lifetime,
                         'assoc_type' => association.assoc_type,
-                        'expire_at'  => (association.issued + association.lifetime))
+                        'expire_at'  => (issued + association.lifetime))
   end
 
   def get_association(server_url, handle=nil)

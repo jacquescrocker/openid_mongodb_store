@@ -15,6 +15,12 @@ class TestOpenidMongodbStore < Test::Unit::TestCase
     assert assoc.secret == secret
   end
 
+  def test_text_date_association
+    store_association(Time.now.to_s)
+
+    assert assoc = get_association
+  end
+
   def test_remove_association
     store_association
 
