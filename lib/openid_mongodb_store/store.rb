@@ -22,7 +22,7 @@ class OpenidMongodbStore::Store < OpenID::Store::Interface
     issued = if association.issued.to_s =~ /\A\d+\Z/
       association.issued
     else
-      Time.parse(association.issued).to_i
+      Time.parse(association.issued.to_s).to_i
     end
 
     secret = BSON::Binary.new(association.secret)

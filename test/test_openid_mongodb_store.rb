@@ -21,6 +21,12 @@ class TestOpenidMongodbStore < Test::Unit::TestCase
     assert assoc = get_association
   end
 
+  def test_time_object_association
+    store_association(Time.now)
+
+    assert get_association
+  end
+
   def test_remove_association
     store_association
 
