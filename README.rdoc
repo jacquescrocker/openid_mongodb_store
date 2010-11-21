@@ -4,11 +4,11 @@ OpenID requires some form of storage for its various cryptographic nuts and bolt
 
 == Install
 
-gem install openid_mongodb_store
+    gem install openid_mongodb_store
 
-db = Mongo::Connection.new('localhost').db('testorama')
-db.authenticate('foo','bar')
-OpenidMongodbStore::Store.new(db)
+    db = Mongo::Connection.new('localhost').db('testorama')
+    db.authenticate('foo','bar')
+    OpenidMongodbStore::Store.new(db)
 
 == Copyright
 
